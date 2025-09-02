@@ -7,6 +7,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import FeatureCards from "./components/FeatureCard";
 import Login from "./pages/Login";
+import TeacherDash from "./pages/TeacherDash";
+import RequireAuth from "./RequireAuth";  
 
 function App() {
   const navigate = useNavigate();
@@ -19,7 +21,12 @@ function App() {
     <Routes>
       {/* Login page */}
       <Route path="/login" element={<Login />} />
+      <Route path="/teacher" element={
+      <RequireAuth allowedRoles={["teacher"]}>
+      <TeacherDash />
+      </RequireAuth>} />
 
+      
       {/* Home page */}
       <Route
         path="/"
