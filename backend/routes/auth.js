@@ -3,28 +3,21 @@ const router = express.Router();
 const mysql = require("mysql2/promise");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-
-// DB Connection
 require("dotenv").config();
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD, // Use DB_PASSWORD here
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
-});
+const pool = require("../db"); 
+
 
 (async () => {
   try {
-    const connection = await pool.getConnection();
+    const connection = await pool.getConnection(); // ✅ Use pool
     console.log("✅ Database connected successfully!");
     connection.release();
   } catch (err) {
-    console.error("❌ DATABASE CONNECTION FAILED. Shutting down.");
-    console.error(err);
-    process.exit(1); // Exit the application if DB connection fails
+    console.error("❌ DATABASE CONNECTION FAILED.", err);
+    process.exit(1);
   }
 })();
+
 
 // LOGIN
 router.post("/login", async (req, res) => {
