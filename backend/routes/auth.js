@@ -1,23 +1,47 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../db");
+const mysql = require("mysql2/promise");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
+// DB Connection
+require("dotenv").config();
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD, // Use DB_PASSWORD here
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+});
+
+(async () => {
+  try {
+    const connection = await pool.getConnection();
+    console.log("✅ Database connected successfully!");
+    connection.release();
+  } catch (err) {
+    console.error("❌ DATABASE CONNECTION FAILED. Shutting down.");
+    console.error(err);
+    process.exit(1); // Exit the application if DB connection fails
+  }
+})();
+
+// LOGIN
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const [rows] = await pool.execute(
       "SELECT user_id, name, email, password, role FROM Users WHERE email = ?",
       [email]
     );
 
-    if (rows.length === 0) return res.status(401).json({ message: "Invalid email" });
+    if (rows.length === 0)
+      return res.status(401).json({ message: "Invalid email" });
 
     const user = rows[0];
 
-    // abhi plaintext check
-    if (user.password !== password) return res.status(401).json({ message: "Wrong password" });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: "Wrong password" });
 
     const token = jwt.sign(
       { id: user.user_id, role: user.role, name: user.name },
@@ -29,6 +53,29 @@ router.post("/login", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+// SIGNUP
+router.post("/signup", async (req, res) => {
+  const { name, email, password, role } = req.body;
+
+  if (!name || !email || !password || !role) {
+    return res.status(400).json({ message: "All fields required" });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const query = "INSERT INTO Users (name, email, password, role) VALUES (?, ?, ?, ?)";
+    await pool.execute(query, [name, email, hashedPassword, role]);
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (err) {
+    console.error(err);
+    if (err.code === "ER_DUP_ENTRY") {
+      res.status(400).json({ message: "Email already exists" });
+    } else {
+      res.status(500).json({ message: "Error signing up" });
+    }
   }
 });
 
