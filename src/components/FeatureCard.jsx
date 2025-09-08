@@ -63,7 +63,7 @@ const FeatureCards = () => {
           </div>
 
           {/* Students Section */}
-          <div className="mb-20">
+          <div className="mb-20" id="for-students">
             <div className="text-center mb-10">
               <span className="inline-block px-4 py-1 text-sm font-semibold text-emerald-400 bg-emerald-400/10 rounded-full mb-3">
                 FOR STUDENTS
@@ -82,7 +82,7 @@ const FeatureCards = () => {
           </div>
 
           {/* Teachers Section */}
-          <div>
+          <div id="for-teachers">
             <div className="text-center mb-10">
               <span className="inline-block px-4 py-1 text-sm font-semibold text-blue-400 bg-blue-400/10 rounded-full mb-3">
                 FOR TEACHERS

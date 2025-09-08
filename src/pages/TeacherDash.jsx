@@ -16,16 +16,6 @@ const TeacherDashboard = () => {
   // Chart instances
   const [charts, setCharts] = useState({});
 
-  // Handle theme change
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
   // Initialize charts when feature changes
   useEffect(() => {
     if (activeFeature !== 'home') {
@@ -37,10 +27,6 @@ const TeacherDashboard = () => {
       Object.values(charts).forEach(chart => chart && chart.destroy());
     };
   }, [activeFeature]);
-
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
 
   const handleFeatureClick = (feature) => {
     setActiveFeature(feature);
@@ -61,10 +47,10 @@ const TeacherDashboard = () => {
       const newChart = new Chart(classScheduleCtx, {
         type: 'bar',
         data: {
-          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+          labels: [], // Removed raw data
           datasets: [{
             label: 'Classes per day',
-            data: [3, 2, 3, 2, 3],
+            data: [], // Removed raw data
             backgroundColor: 'rgba(79, 70, 229, 0.7)',
             borderColor: 'rgba(79, 70, 229, 1)',
             borderWidth: 1
@@ -94,9 +80,9 @@ const TeacherDashboard = () => {
       const newChart = new Chart(attendanceCtx, {
         type: 'doughnut',
         data: {
-          labels: ['Present', 'Absent', 'Late'],
+          labels: [], // Removed raw data
           datasets: [{
-            data: [75, 15, 10],
+            data: [], // Removed raw data
             backgroundColor: [
               'rgba(34, 197, 94, 0.7)',
               'rgba(239, 68, 68, 0.7)',
@@ -131,10 +117,10 @@ const TeacherDashboard = () => {
       const newChart = new Chart(performanceCtx, {
         type: 'line',
         data: {
-          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+          labels: [], // Removed raw data
           datasets: [{
             label: 'Class Average',
-            data: [72, 75, 78, 80, 82, 85],
+            data: [], // Removed raw data
             borderColor: 'rgba(79, 70, 229, 1)',
             backgroundColor: 'rgba(79, 70, 229, 0.1)',
             tension: 0.3,
@@ -163,10 +149,10 @@ const TeacherDashboard = () => {
       const newChart = new Chart(overallPerformanceCtx, {
         type: 'radar',
         data: {
-          labels: ['Mathematics', 'Physics', 'Computer Science', 'English', 'History'],
+          labels: [], // Removed raw data
           datasets: [{
             label: 'Class Average',
-            data: [85, 78, 92, 80, 75],
+            data: [], // Removed raw data
             backgroundColor: 'rgba(79, 70, 229, 0.2)',
             borderColor: 'rgba(79, 70, 229, 1)',
             pointBackgroundColor: 'rgba(79, 70, 229, 1)'
@@ -194,9 +180,9 @@ const TeacherDashboard = () => {
       const newChart = new Chart(gradeDistributionCtx, {
         type: 'pie',
         data: {
-          labels: ['A (90-100)', 'B (80-89)', 'C (70-79)', 'D (60-69)', 'F (<60)'],
+          labels: [], // Removed raw data
           datasets: [{
-            data: [25, 35, 25, 10, 5],
+            data: [], // Removed raw data
             backgroundColor: [
               'rgba(34, 197, 94, 0.7)',
               'rgba(79, 70, 229, 0.7)',
@@ -251,8 +237,6 @@ const TeacherDashboard = () => {
     <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-gray-100 transition-all duration-500 min-h-screen">
       {/* Navbar */}
       <Navbar 
-        theme={theme} 
-        onThemeToggle={toggleTheme} 
         onHomeClick={handleHomeClick}
         showHomeButton={activeFeature !== 'home'}
       />
@@ -296,13 +280,6 @@ const Navbar = ({ theme, onThemeToggle, onHomeClick, showHomeButton }) => (
       </div>
     </div>
     <div className="flex gap-3 items-center">
-      <button 
-        onClick={onThemeToggle}
-        className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 transition-all duration-200 font-medium text-sm shadow-lg"
-      >
-        <span>{theme === 'light' ? '🌙' : '☀️'}</span>
-        <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-      </button>
       <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-0.5 shadow-lg">
         <img 
           src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" 
@@ -497,40 +474,23 @@ const ClassesFeature = ({ classScheduleChartRef }) => (
           </svg>
         </div>
         <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Your Classes</h2>
-        <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">Manage all your courses and class schedules. View upcoming classes, edit course details, and organize your teaching schedule.</p>
+        <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">Manage all your courses and class schedules. 
+          View upcoming classes, edit course details, and organize your teaching schedule.
+        </p>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div className="bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
           <h4 className="font-semibold mb-4 text-gray-800 dark:text-gray-200">Class Schedule</h4>
-          <div className="h-64">
+          {/* <div className="h-64">
             <canvas ref={classScheduleChartRef}></canvas>
-          </div>
+          </div> */}
         </div>
         <div className="bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
           <h4 className="font-semibold mb-4 text-gray-800 dark:text-gray-200">Upcoming Classes</h4>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-600 rounded-lg shadow-sm">
-              <div>
-                <p className="font-medium">Mathematics 101</p>
-                <p className="text-sm text-gray-500 dark:text-gray-300">10:00 AM - 11:30 AM</p>
-              </div>
-              <span className="px-2 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-xs rounded-full">Room 302</span>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-600 rounded-lg shadow-sm">
-              <div>
-                <p className="font-medium">Physics Lab</p>
-                <p className="text-sm text-gray-500 dark:text-gray-300">1:00 PM - 3:00 PM</p>
-              </div>
-              <span className="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-xs rounded-full">Lab B</span>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-white dark:bg-gray-600 rounded-lg shadow-sm">
-              <div>
-                <p className="font-medium">Computer Science</p>
-                <p className="text-sm text-gray-500 dark:text-gray-300">3:30 PM - 5:00 PM</p>
-              </div>
-              <span className="px-2 py-1 bg-purple-100 dark:bg-purple-800 text-purple-800 dark:text-purple-100 text-xs rounded-full">Room 105</span>
-            </div>
+            {/* Raw data removed. Populate this dynamically. */}
+            <div className="text-center text-gray-500 dark:text-gray-400 pt-8">No upcoming classes.</div>
           </div>
         </div>
       </div>
@@ -548,33 +508,7 @@ const ClassesFeature = ({ classScheduleChartRef }) => (
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-              <tr>
-                <td className="py-3">Mathematics 101</td>
-                <td className="py-3">10:00 AM - 11:30 AM</td>
-                <td className="py-3">Mon, Wed, Fri</td>
-                <td className="py-3">24 students</td>
-                <td className="py-3">
-                  <button className="px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-sm rounded-md">View</button>
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3">Physics Lab</td>
-                <td className="py-3">1:00 PM - 3:00 PM</td>
-                <td className="py-3">Tue, Thu</td>
-                <td className="py-3">18 students</td>
-                <td className="py-3">
-                  <button className="px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-sm rounded-md">View</button>
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3">Computer Science</td>
-                <td className="py-3">3:30 PM - 5:00 PM</td>
-                <td className="py-3">Mon, Wed, Fri</td>
-                <td className="py-3">32 students</td>
-                <td className="py-3">
-                  <button className="px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-sm rounded-md">View</button>
-                </td>
-              </tr>
+              {/* Raw data removed. Populate this dynamically. */}
             </tbody>
           </table>
         </div>
@@ -594,7 +528,9 @@ const AttendanceFeature = ({ attendanceChartRef }) => (
           </svg>
         </div>
         <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Take Attendance</h2>
-        <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">Generate QR codes for quick attendance marking. Track student presence and manage attendance records efficiently.</p>
+        <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">Generate QR codes for quick attendance marking. 
+          Track student presence and manage attendance records efficiently.
+        </p>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -602,8 +538,10 @@ const AttendanceFeature = ({ attendanceChartRef }) => (
           <h4 className="font-semibold mb-4 text-gray-800 dark:text-gray-200">Generate QR Code</h4>
           <div className="flex flex-col items-center">
             <div className="w-48 h-48 bg-white p-4 rounded-lg mb-4 flex items-center justify-center">
-              <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
+              <div className="w-full h-full  bg-gray-200 flex items-center justify-center text-gray-500">
+                <div className="text-center">
                 QR Code will appear here
+                </div>
               </div>
             </div>
             <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-md hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
@@ -613,9 +551,9 @@ const AttendanceFeature = ({ attendanceChartRef }) => (
         </div>
         <div className="bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
           <h4 className="font-semibold mb-4 text-gray-800 dark:text-gray-200">Attendance Stats</h4>
-          <div className="h-64">
+          {/* <div className="h-64">
             <canvas ref={attendanceChartRef}></canvas>
-          </div>
+          </div> */}
         </div>
       </div>
       <div className="bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
@@ -623,9 +561,7 @@ const AttendanceFeature = ({ attendanceChartRef }) => (
         <div className="mb-4 flex items-center space-x-4">
           <select className="px-4 py-2 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg">
             <option>Select Class</option>
-            <option>Mathematics 101</option>
-            <option>Physics Lab</option>
-            <option>Computer Science</option>
+            {/* Raw data removed. Populate this dynamically. */}
           </select>
           <button className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow-md hover:from-green-600 hover:to-emerald-700 transition-all duration-200">
             Mark Attendance
@@ -642,51 +578,7 @@ const AttendanceFeature = ({ attendanceChartRef }) => (
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-              <tr>
-                <td className="py-3">John Doe</td>
-                <td className="py-3">S12345</td>
-                <td className="py-3">
-                  <span className="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-xs rounded-full">Present</span>
-                </td>
-                <td className="py-3">
-                  <div className="flex items-center space-x-2">
-                    <label className="inline-flex items-center">
-                      <input type="checkbox" className="attendance-checkbox h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
-                      <span className="ml-2 text-sm">Present</span>
-                    </label>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3">Jane Smith</td>
-                <td className="py-3">S12346</td>
-                <td className="py-3">
-                  <span className="px-2 py-1 bg-red-100 dark:bg-red-800 text-red-800 dark:text-red-100 text-xs rounded-full">Absent</span>
-                </td>
-                <td className="py-3">
-                  <div className="flex items-center space-x-2">
-                    <label className="inline-flex items-center">
-                      <input type="checkbox" className="attendance-checkbox h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
-                      <span className="ml-2 text-sm">Present</span>
-                    </label>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3">Robert Johnson</td>
-                <td className="py-3">S12347</td>
-                <td className="py-3">
-                  <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 text-xs rounded-full">Late</span>
-                </td>
-                <td className="py-3">
-                  <div className="flex items-center space-x-2">
-                    <label className="inline-flex items-center">
-                      <input type="checkbox" className="attendance-checkbox h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
-                      <span className="ml-2 text-sm">Present</span>
-                    </label>
-                  </div>
-                </td>
-              </tr>
+              {/* Raw data removed. Populate this dynamically. */}
             </tbody>
           </table>
         </div>
@@ -712,37 +604,15 @@ const StudentsFeature = ({ performanceChartRef }) => (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div className="bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
           <h4 className="font-semibold mb-4 text-gray-800 dark:text-gray-200">Student Performance</h4>
-          <div className="h-64">
+          {/* <div className="h-64">
             <canvas ref={performanceChartRef}></canvas>
-          </div>
+          </div> */}
         </div>
         <div className="bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
           <h4 className="font-semibold mb-4 text-gray-800 dark:text-gray-200">Top Students</h4>
           <div className="space-y-4">
-            <div className="flex items-center p-3 bg-white dark:bg-gray-600 rounded-lg shadow-sm">
-              <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-600 rounded-full flex items-center justify-center text-white font-bold mr-3">1</div>
-              <div className="flex-1">
-                <p className="font-medium">Emma Watson</p>
-                <p className="text-sm text-gray-500 dark:text-gray-300">Mathematics 101 - 98%</p>
-              </div>
-              <span className="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-xs rounded-full">A+</span>
-            </div>
-            <div className="flex items-center p-3 bg-white dark:bg-gray-600 rounded-lg shadow-sm">
-              <div className="w-10 h-10 bg-gradient-to-br from-gray-400 to-gray-600 rounded-full flex items-center justify-center text-white font-bold mr-3">2</div>
-              <div className="flex-1">
-                <p className="font-medium">Michael Brown</p>
-                <p className="text-sm text-gray-500 dark:text-gray-300">Physics Lab - 96%</p>
-              </div>
-              <span className="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-xs rounded-full">A+</span>
-            </div>
-            <div className="flex items-center p-3 bg-white dark:bg-gray-600 rounded-lg shadow-sm">
-              <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-amber-600 rounded-full flex items-center justify-center text-white font-bold mr-3">3</div>
-              <div className="flex-1">
-                <p className="font-medium">Sarah Johnson</p>
-                <p className="text-sm text-gray-500 dark:text-gray-300">Computer Science - 94%</p>
-              </div>
-              <span className="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-xs rounded-full">A</span>
-            </div>
+            {/* Raw data removed. Populate this dynamically. */}
+            <div className="text-center text-gray-500 dark:text-gray-400 pt-8">No student data available.</div>
             </div>
         </div>
       </div>
@@ -752,9 +622,7 @@ const StudentsFeature = ({ performanceChartRef }) => (
           <input type="text" placeholder="Search students..." className="px-4 py-2 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg w-64"/>
           <select className="px-4 py-2 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded-lg">
             <option>All Classes</option>
-            <option>Mathematics 101</option>
-            <option>Physics Lab</option>
-            <option>Computer Science</option>
+            {/* Raw data removed. Populate this dynamically. */}
           </select>
         </div>
         <div className="overflow-x-auto">
@@ -770,66 +638,7 @@ const StudentsFeature = ({ performanceChartRef }) => (
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-              <tr>
-                <td className="py-3 flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-gray-200 mr-2"></div>
-                  John Doe
-                </td>
-                <td className="py-3">S12345</td>
-                <td className="py-3">Mathematics 101</td>
-                <td className="py-3">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-green-600 h-2 rounded-full" style={{width: '92%'}}></div>
-                  </div>
-                  <span className="text-xs">92%</span>
-                </td>
-                <td className="py-3">
-                  <span className="px-2 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-xs rounded-full">B+</span>
-                </td>
-                <td className="py-3">
-                  <button className="px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-sm rounded-md">View</button>
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3 flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-gray-200 mr-2"></div>
-                  Jane Smith
-                </td>
-                <td className="py-3">S12346</td>
-                <td className="py-3">Physics Lab</td>
-                <td className="py-3">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-green-600 h-2 rounded-full" style={{width: '88%'}}></div>
-                  </div>
-                  <span className="text-xs">88%</span>
-                </td>
-                <td className="py-3">
-                  <span className="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-xs rounded-full">A</span>
-                </td>
-                <td className="py-3">
-                  <button className="px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-sm rounded-md">View</button>
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3 flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-gray-200 mr-2"></div>
-                  Robert Johnson
-                </td>
-                <td className="py-3">S12347</td>
-                <td className="py-3">Computer Science</td>
-                <td className="py-3">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-yellow-500 h-2 rounded-full" style={{width: '76%'}}></div>
-                  </div>
-                  <span className="text-xs">76%</span>
-                </td>
-                <td className="py-3">
-                  <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100 text-xs rounded-full">C+</span>
-                </td>
-                <td className="py-3">
-                  <button className="px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-sm rounded-md">View</button>
-                </td>
-              </tr>
+              {/* Raw data removed. Populate this dynamically. */}
             </tbody>
           </table>
         </div>
@@ -855,92 +664,15 @@ const ReportsFeature = ({ overallPerformanceChartRef, gradeDistributionChartRef 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div className="bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
           <h4 className="font-semibold mb-4 text-gray-800 dark:text-gray-200">Overall Performance</h4>
-          <div className="h-64">
+          {/* <div className="h-64">
             <canvas ref={overallPerformanceChartRef}></canvas>
-          </div>
+          </div> */}
         </div>
         <div className="bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
           <h4 className="font-semibold mb-4 text-gray-800 dark:text-gray-200">Grade Distribution</h4>
-          <div className="h-64">
+          {/* <div className="h-64">
             <canvas ref={gradeDistributionChartRef}></canvas>
-          </div>
-        </div>
-      </div>
-      <div className="bg-gray-50/80 dark:bg-gray-700/50 rounded-xl p-6 border border-gray-200/50 dark:border-gray-600/50">
-        <h4 className="font-semibold mb-4 text-gray-800 dark:text-gray-200">Generate Reports</h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-white dark:bg-gray-600 p-4 rounded-lg border border-gray-200 dark:border-gray-500">
-            <h5 className="font-medium mb-2">Attendance Report</h5>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">Generate detailed attendance reports for selected classes and date ranges.</p>
-            <button className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg text-sm shadow-md hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
-              Generate
-            </button>
-          </div>
-          <div className="bg-white dark:bg-gray-600 p-4 rounded-lg border border-gray-200 dark:border-gray-500">
-            <h5 className="font-medium mb-2">Performance Report</h5>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">Create performance reports for individual students or entire classes.</p>
-            <button className="w-full px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg text-sm shadow-md hover:from-green-600 hover:to-emerald-700 transition-all duration-200">
-              Generate
-            </button>
-          </div>
-          <div className="bg-white dark:bg-gray-600 p-4 rounded-lg border border-gray-200 dark:border-gray-500">
-            <h5 className="font-medium mb-2">Progress Report</h5>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">Track student progress over time with comprehensive progress reports.</p>
-            <button className="w-full px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-600 text-white rounded-lg text-sm shadow-md hover:from-orange-600 hover:to-amber-700 transition-all duration-200">
-              Generate
-            </button>
-          </div>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-600">
-                <th className="pb-3">Report Name</th>
-                <th className="pb-3">Generated On</th>
-                <th className="pb-3">Class</th>
-                <th className="pb-3">Type</th>
-                <th className="pb-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-              <tr>
-                <td className="py-3">Mathematics 101 - Attendance</td>
-                <td className="py-3">Oct 15, 2023</td>
-                <td className="py-3">Mathematics 101</td>
-                <td className="py-3">
-                  <span className="px-2 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-xs rounded-full">Attendance</span>
-                </td>
-                <td className="py-3">
-                  <button className="px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-sm rounded-md mr-2">View</button>
-                  <button className="px-3 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-sm rounded-md">Download</button>
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3">Physics Lab - Performance</td>
-                <td className="py-3">Oct 10, 2023</td>
-                <td className="py-3">Physics Lab</td>
-                <td className="py-3">
-                  <span className="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-xs rounded-full">Performance</span>
-                </td>
-                <td className="py-3">
-                  <button className="px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-sm rounded-md mr-2">View</button>
-                  <button className="px-3 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-sm rounded-md">Download</button>
-                </td>
-              </tr>
-              <tr>
-                <td className="py-3">Computer Science - Progress</td>
-                <td className="py-3">Oct 5, 2023</td>
-                <td className="py-3">Computer Science</td>
-                <td className="py-3">
-                  <span className="px-2 py-1 bg-orange-100 dark:bg-orange-800 text-orange-800 dark:text-orange-100 text-xs rounded-full">Progress</span>
-                </td>
-                <td className="py-3">
-                  <button className="px-3 py-1 bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-sm rounded-md mr-2">View</button>
-                  <button className="px-3 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-sm rounded-md">Download</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          </div> */}
         </div>
       </div>
     </div>

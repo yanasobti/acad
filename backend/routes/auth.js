@@ -8,9 +8,6 @@ const supabase = require("../db");
 // LOGIN - with debug logs
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  
-  console.log("🔐 Login attempt for:", email);
-  
   try {
     const { data: user, error } = await supabase
       .from('users')
@@ -18,48 +15,20 @@ router.post("/login", async (req, res) => {
       .eq('email', email)
       .single();
 
-    console.log("📊 User found:", user ? "Yes" : "No");
-    console.log("❌ Error:", error);
-
     if (error || !user) {
-      return res.status(401).json({ message: "Invalid email or password" });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // DEBUG: See what's being compared
-    console.log("🔑 Input password:", password);
-    console.log("💾 Stored password:", user.password);
-    console.log("📏 Stored password length:", user.password.length);
-    
-    const isMatch = await bcrypt.compare(password, user.password);
-    console.log("✅ Password match:", isMatch);
-    
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or password" });
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Generate JWT token
-    const token = jwt.sign(
-      { 
-        id: user.id, 
-        role: user.role, 
-        name: user.name,
-        email: user.email 
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
-
-    res.json({ 
-      token, 
-      role: user.role, 
-      name: user.name,
-      email: user.email,
-      id: user.id
-    });
-
+    // Include role in the response
+    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
+    res.json({ token, role: user.role, name: user.name });
   } catch (err) {
-    console.error("Login error:", err);
-    res.status(500).json({ message: "Server error during login" });
+    res.status(500).json({ message: "Error logging in" });
   }
 });
 

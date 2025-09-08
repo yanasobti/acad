@@ -31,22 +31,22 @@ function Navbar() {
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center space-x-2">
           <a
-            href="#features"
-            onClick={(e) => handleLinkClick(e, '#features')}
+            href="#for-students"
+            onClick={(e) => handleLinkClick(e, '#for-students')}
             className="px-4 py-2 rounded-md hover:bg-white/10 transition-colors"
           >
             Students
           </a>
           <a
-            href="#for-students"
-            onClick={(e) => handleLinkClick(e, '#for-students')}
+            href="#for-teachers"
+            onClick={(e) => handleLinkClick(e, '#for-teachers')}
             className="px-4 py-2 rounded-md hover:bg-white/10 transition-colors"
           >
             Teachers
           </a>
           <a
-            href="#for-teachers"
-            onClick={(e) => handleLinkClick(e, '#for-teachers')}
+            href="#about"
+            onClick={(e) => handleLinkClick(e, '#about')}
             className="px-4 py-2 rounded-md hover:bg-white/10 transition-colors"
           >
             About
@@ -60,80 +60,6 @@ function Navbar() {
             Login
           </Link>
         </nav>
-
-        {/* Mobile menu button */}
-        <button
-          className="md:hidden text-white z-50"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              ></path>
-            </svg>
-          ) : (
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h16m-7 6h7"
-              ></path>
-            </svg>
-          )}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      <div
-        className={`md:hidden fixed top-0 left-0 w-full h-full bg-black/90 backdrop-blur-sm flex flex-col items-center justify-center space-y-6 text-xl transition-transform duration-300 ease-in-out ${
-          isMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        <a
-          href="#features"
-          className="px-4 py-2 rounded-md hover:bg-white/10 transition-colors"
-          onClick={(e) => handleLinkClick(e, '#features')}
-        >
-          Features
-        </a>
-        <a
-          href="#for-students"
-          className="px-4 py-2 rounded-md hover:bg-white/10 transition-colors"
-          onClick={(e) => handleLinkClick(e, '#for-students')}
-        >
-          Students
-        </a>
-        <a
-          href="#for-teachers"
-          className="px-4 py-2 rounded-md hover:bg-white/10 transition-colors"
-          onClick={(e) => handleLinkClick(e, '#for-teachers')}
-        >
-          Teachers
-        </a>
-
-        {/* ✅ Mobile Login Link */}
-        <Link
-          to="/login"
-          className="mt-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-5 rounded-lg shadow-lg transition-all duration-300"
-          onClick={() => setIsMenuOpen(false)} // close menu after clicking
-        >
-          Login
-        </Link>
       </div>
     </header>
   );
