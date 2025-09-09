@@ -45,8 +45,8 @@ function Navbar() {
             Teachers
           </a>
           <a
-            href="#about"
-            onClick={(e) => handleLinkClick(e, '#about')}
+            href="#for-teachers"
+            onClick={(e) => handleLinkClick(e, '#for-teachers')}
             className="px-4 py-2 rounded-md hover:bg-white/10 transition-colors"
           >
             About

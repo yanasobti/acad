@@ -1,16 +1,18 @@
 import { useEffect } from "react";
-import { useNavigate, Routes, Route } from "react-router-dom"; 
+import { useNavigate, Routes, Route } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
+
 import Squares from "./components/Squares";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import FeatureCards from "./components/FeatureCard";
+
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import TeacherDash from "./pages/TeacherDash";
 import RequireAuth from "./RequireAuth";  
 import Signup from "./pages/Signup.jsx";
-import AdminDash from "./pages/AdminDash"; // Import at the top
 
 
 function App() {
@@ -21,12 +23,12 @@ function App() {
   }, []);
 
   return (
-   <Routes>
-  {/* Login page */}
-  <Route path="/login" element={<Login />} />
-
-  {/* Signup page */}
-  <Route path="/signup" element={<Signup />} />
+    <Routes>
+      {/* Public Routes */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="/about" element={<AcadenceAbout />} /> {/* ✅ new route */}
 
   {/* Teacher dashboard (protected) */}
   <Route
@@ -36,12 +38,6 @@ function App() {
         <TeacherDash />
       </RequireAuth>
     }
-  />
-
-  {/* Admin dashboard (protected) */}
-  <Route
-    path="/admin"
-    element={<AdminDash />}
   />
 
   {/* Home page */}
@@ -59,16 +55,16 @@ function App() {
           />
         </div>
 
-        <header className="absolute top-4 left-0 w-full z-50">
-          <Navbar />
-        </header>
+            {/* Navbar */}
+            <header className="absolute top-4 left-0 w-full z-50">
+              <Navbar />
+            </header>
 
-        {/* The section is now centered on mobile and aligned left on desktop */}
-        <section className="relative h-screen flex items-center justify-center md:justify-start px-4 sm:px-10 md:ml-[10em]">
-          <div className="max-w-lg z-10 text-center md:text-left">
-            <h1 className="text-4xl sm:text-6xl font-extrabold leading-tight mb-4">
+        <section className="relative h-screen flex items-center px-10 ml-[10em]">
+          <div className="max-w-lg z-10">
+            <h1 className="text-6xl font-extrabold leading-tight mb-4">
               AI-Powered
-              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 justify-center md:justify-start">
+              <div className="flex gap-4">
                 <span className="text-indigo-500">Academic</span> Assistant
               </div>
             </h1>
@@ -77,17 +73,15 @@ function App() {
               and monitor your CGPA with smart academic tools.
             </p>
 
-            {/* ✅ Jab button click karein → /login pe navigate */}
-            <button
-              onClick={() => navigate("/login")}
-              className="bg-indigo-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg shadow-lg"
-            >
-              Get Started
-            </button>
-          </div>
+                <button
+                  onClick={() => navigate("/login")}
+                  className="bg-indigo-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg shadow-lg"
+                >
+                  Get Started
+                </button>
+              </div>
 
-          {/* This div is now hidden on mobile (hidden) and visible on medium screens and up (md:block) */}
-          <div className="hidden md:block absolute bottom-0 right-0 p-4">
+          <div className="absolute bottom-0 right-0 p-4">
             <img
               src="./assets/robot2.png"
               alt="Robot Assistant"
@@ -96,12 +90,13 @@ function App() {
           </div>
         </section>
 
-        <FeatureCards />
-        <Footer />
-      </div>
-    }
-  />
-</Routes>
+            {/* Feature Cards & Footer */}
+            <FeatureCards />
+            <Footer />
+          </div>
+        }
+      />
+    </Routes>
   );
 }
 
