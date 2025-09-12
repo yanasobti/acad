@@ -12,6 +12,7 @@ import StudentDashboard from "./pages/StudentDashboard";
 import RequireAuth from "./RequireAuth";
 import Signup from "./pages/Signup";
 import Unauthorized from "./pages/Unauthorized";
+import AdminDashboard from "./pages/AdminDash"; // Import the AdminDashboard
 
 function App() {
   const navigate = useNavigate();
@@ -22,28 +23,10 @@ function App() {
 
   return (
     <Routes>
+      {/* Public Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
-
-      <Route
-        path="/teacher"
-        element={
-          <RequireAuth allowedRoles={["teacher"]}>
-            <TeacherDash />
-          </RequireAuth>
-        }
-      />
-      <Route
-        path="/student"
-        element={
-          <RequireAuth allowedRoles={["student"]}>
-            <StudentDashboard />
-          </RequireAuth>
-        }
-      />
-
       <Route path="/unauthorized" element={<Unauthorized />} />
-
       <Route
         path="/"
         element={
@@ -90,6 +73,19 @@ function App() {
           </div>
         }
       />
+
+      {/* Protected Routes */}
+      <Route element={<RequireAuth allowedRoles={["admin"]} />}>
+        <Route path="/admin" element={<AdminDashboard />} />
+      </Route>
+
+      <Route element={<RequireAuth allowedRoles={["teacher"]} />}>
+        <Route path="/teacher" element={<TeacherDash />} />
+      </Route>
+
+      <Route element={<RequireAuth allowedRoles={["student"]} />}>
+        <Route path="/student" element={<StudentDashboard />} />
+      </Route>
     </Routes>
   );
 }

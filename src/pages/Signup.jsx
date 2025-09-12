@@ -38,7 +38,7 @@ function Signup() {
       {/* Left Side Image */}
       <div className="w-1/2 hidden md:flex justify-center items-center ">
         <img
-          src="/assets/signup.jpg"
+          src="./assets/signup.jpg"
           alt="Signup illustration"
           className="w-5/6 h-auto"
         />

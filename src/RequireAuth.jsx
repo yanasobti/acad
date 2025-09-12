@@ -1,13 +1,29 @@
-import { Navigate } from "react-router-dom";
+import { useLocation, Navigate, Outlet } from "react-router-dom";
 
-export default function RequireAuth({ children, allowedRoles }) {
+const RequireAuth = ({ allowedRoles }) => {
+  const location = useLocation();
+
+  // Get role and token from localStorage
+  const userRole = localStorage.getItem("role");
   const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
 
-  console.log("RequireAuth role:", role); // debugging
+  // If no token, redirect to login
+  if (!token) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
-  if (!token) return <Navigate to="/login" replace />;
-  if (!allowedRoles.includes(role)) return <Navigate to="/unauthorized" replace />;
+  // Check if the user's role is included in the allowedRoles array
+  // Convert both to lowercase for case-insensitive comparison
+  const isAuthorized = allowedRoles?.some(allowedRole => 
+    allowedRole.toLowerCase() === userRole?.toLowerCase()
+  );
 
-  return children;
-}
+  if (isAuthorized) {
+    return <Outlet />;
+  } else {
+    // If logged in but with the wrong role, send to Unauthorized page
+    return <Navigate to="/unauthorized" state={{ from: location }} replace />;
+  }
+};
+
+export default RequireAuth;

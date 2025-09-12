@@ -23,12 +23,18 @@ function Login() {
       localStorage.setItem("role", res.data.role);
 
       // Redirect based on role
-      if (res.data.role === "teacher") navigate("/teacher");
-      else if (res.data.role === "student") navigate("/student");
-      else navigate("/unauthorized");
-    } catch (error) {
-      setErr(error.response?.data?.message || "Error logging in");
-    }
+      if (res.data.role === "admin") {
+    navigate("/admin");
+  } else if (res.data.role === "teacher") {
+    navigate("/teacher");
+  } else if (res.data.role === "student") {
+    navigate("/student");
+  } else {
+    navigate("/unauthorized");
+  }
+} catch (error) {
+  setErr(error.response?.data?.message || "Error logging in");
+}
   };
 
   return (

@@ -10,10 +10,8 @@ import {
 } from "react-icons/fa";
 
 export default function AdminDashboard() {
-  // example function placeholders
-  const changeMode = () => {
-    alert("Toggle Dark Mode coming soon!");
-  };
+  // Example function placeholders
+  const changeMode = () => alert("Toggle Dark Mode coming soon!");
   const dashboard = () => alert("Dashboard clicked!");
   const manageUsers = () => alert("Manage Users clicked!");
   const calculateReports = () => alert("Calculate Reports clicked!");
