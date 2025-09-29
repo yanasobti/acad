@@ -18,35 +18,46 @@ function Login() {
     try {
       const res = await axios.post("http://localhost:5000/api/auth/login", formData);
 
-      // Store token and role
+      // Store token, role, and additional user info
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
+      localStorage.setItem("userId", res.data.id);
+      localStorage.setItem("userName", res.data.name);
+      localStorage.setItem("userEmail", res.data.email);
 
       // Redirect based on role
       if (res.data.role === "admin") {
-    navigate("/admin");
-  } else if (res.data.role === "teacher") {
-    navigate("/teacher");
-  } else if (res.data.role === "student") {
-    navigate("/student");
-  } else {
-    navigate("/unauthorized");
-  }
-} catch (error) {
-  setErr(error.response?.data?.message || "Error logging in");
-}
+        navigate("/admin");
+      } else if (res.data.role === "teacher") {
+        navigate("/teacher");
+      } else if (res.data.role === "student") {
+        navigate("/student");
+      } else {
+        navigate("/unauthorized");
+      }
+    } catch (error) {
+      setErr(error.response?.data?.message || "Error logging in");
+    }
   };
 
   return (
     <div className="h-screen flex">
+      {/* Left Image */}
       <div className="w-1/2 hidden md:flex justify-center items-center">
-        <img src="/assets/login.jpg" alt="Login illustration" className="w-3/4 h-auto" />
+        <img
+          src="/assets/login.jpg"
+          alt="Login illustration"
+          className="w-3/4 h-auto"
+        />
       </div>
 
+      {/* Right Form */}
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center px-8">
         <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-lg">
           <h2 className="text-4xl font-bold text-blue-700 mb-4 text-center">Login</h2>
-          <p className="text-gray-600 mb-6 text-center">Welcome back! Please enter your details.</p>
+          <p className="text-gray-600 mb-6 text-center">
+            Welcome back! Please enter your details.
+          </p>
 
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <input
@@ -80,7 +91,10 @@ function Login() {
 
           <p className="text-gray-600 mt-4 text-center">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-blue-700 font-semibold hover:underline">
+            <Link
+              to="/signup"
+              className="text-blue-700 font-semibold hover:underline"
+            >
               Sign Up
             </Link>
           </p>
