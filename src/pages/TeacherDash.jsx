@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const TeacherDashboard = () => {
   const [activeFeature, setActiveFeature] = useState('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [teacherData, setTeacherData] = useState(null);
@@ -15,12 +16,23 @@ const TeacherDashboard = () => {
     allClasses: [],
     allStudents: []
   });
-
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchTeacherData();
   }, []);
+
+  // Handle clicking outside profile dropdown
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (profileOpen && !e.target.closest('.profile-dropdown') && !e.target.closest('.profile-button')) {
+        setProfileOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [profileOpen]);
 
   const fetchTeacherData = async () => {
     try {
@@ -40,11 +52,19 @@ const TeacherDashboard = () => {
 
       console.log('Fetching data for teacher ID:', teacherId);
 
-      // Set teacher data
+      // Set comprehensive teacher data
       setTeacherData({
         id: teacherId,
         name: teacherName,
-        email: teacherEmail
+        email: teacherEmail,
+        teacherId: teacherId,
+        department: localStorage.getItem('userDepartment') || 'Computer Science',
+        designation: localStorage.getItem('userDesignation') || 'Associate Professor',
+        specialization: localStorage.getItem('userSpecialization') || 'Machine Learning & Data Science',
+        office: localStorage.getItem('userOffice') || 'Room 301, CS Building',
+        officeHours: localStorage.getItem('userOfficeHours') || 'Mon-Fri: 2:00 PM - 4:00 PM',
+        phone: localStorage.getItem('userPhone') || '+1 (555) 123-4567',
+        joinDate: localStorage.getItem('userJoinDate') || 'September 2020'
       });
 
       // Initialize with empty arrays in case of missing tables
@@ -239,15 +259,21 @@ const TeacherDashboard = () => {
       allStudents: uniqueStudents
     };
   };
-
   const handleFeatureClick = (feature) => {
     setActiveFeature(feature);
     setSidebarOpen(true);
+    setProfileOpen(false);
   };
 
   const handleHomeClick = () => {
     setActiveFeature('home');
     setSidebarOpen(false);
+    setProfileOpen(false);
+  };
+
+  const toggleProfile = () => {
+    setProfileOpen(!profileOpen);
+    if (sidebarOpen) setSidebarOpen(false);
   };
 
   const handleLogout = () => {
@@ -312,6 +338,8 @@ const TeacherDashboard = () => {
         showHomeButton={activeFeature !== 'home'}
         teacherData={teacherData}
         onLogout={handleLogout}
+        profileOpen={profileOpen}
+        toggleProfile={toggleProfile}
       />
       
       <Sidebar 
@@ -329,7 +357,7 @@ const TeacherDashboard = () => {
 };
 
 // Navbar Component
-const Navbar = ({ onHomeClick, showHomeButton, teacherData, onLogout }) => (
+const Navbar = ({ onHomeClick, showHomeButton, teacherData, onLogout, profileOpen, toggleProfile }) => (
   <nav className="flex justify-between items-center px-6 py-4 bg-white/95 backdrop-blur-md border-b border-gray-200/50 fixed top-0 left-0 right-0 z-50 shadow-lg">
     <div className="flex items-center gap-4">
       <button 
@@ -359,17 +387,97 @@ const Navbar = ({ onHomeClick, showHomeButton, teacherData, onLogout }) => (
         </div>
       </div>
     </div>
-    <div className="flex gap-3 items-center">
+    
+    <div className="flex gap-3 items-center relative">
       <button
         onClick={onLogout}
         className="px-4 py-2 text-sm bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors"
       >
         Logout
       </button>
-      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-0.5 shadow-lg">
-        <div className="w-full h-full rounded-full bg-white flex items-center justify-center text-sm font-bold text-blue-600">
-          {teacherData?.name?.charAt(0)?.toUpperCase() || 'T'}
-        </div>
+      
+      {/* Profile Button */}
+      <div className="relative">
+        <button 
+          onClick={toggleProfile}
+          className="profile-button w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-0.5 shadow-lg hover:shadow-xl transition-all duration-200"
+        >
+          <div className="w-full h-full rounded-full bg-white flex items-center justify-center text-sm font-bold text-blue-600">
+            {teacherData?.name?.charAt(0)?.toUpperCase() || 'T'}
+          </div>
+        </button>
+
+        {/* Profile Dropdown */}
+        {profileOpen && teacherData && (
+          <div className="profile-dropdown absolute right-0 top-12 w-80 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-200/50 z-50 overflow-hidden">
+            <div className="p-6">
+              {/* Profile Header */}
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 p-1 mx-auto mb-4">
+                  <img 
+                    src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" 
+                    className="w-full h-full rounded-full bg-white object-cover" 
+                    alt="profile" 
+                  />
+                </div>
+                <h2 className="text-xl font-bold text-gray-800">{teacherData.name}</h2>
+                <p className="text-gray-600">{teacherData.email}</p>
+                <div className="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mt-2">
+                  {teacherData.teacherId}
+                </div>
+              </div>
+
+              {/* Profile Details */}
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-semibold text-gray-500 uppercase">Department</label>
+                    <p className="text-sm text-gray-800">{teacherData.department}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold text-gray-500 uppercase">Designation</label>
+                    <p className="text-sm text-gray-800">{teacherData.designation}</p>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="text-xs font-semibold text-gray-500 uppercase">Specialization</label>
+                  <p className="text-sm text-gray-800">{teacherData.specialization}</p>
+                </div>
+                
+                <div>
+                  <label className="text-xs font-semibold text-gray-500 uppercase">Office</label>
+                  <p className="text-sm text-gray-800">{teacherData.office}</p>
+                </div>
+                
+                <div>
+                  <label className="text-xs font-semibold text-gray-500 uppercase">Office Hours</label>
+                  <p className="text-sm text-gray-800">{teacherData.officeHours}</p>
+                </div>
+                
+                <div>
+                  <label className="text-xs font-semibold text-gray-500 uppercase">Phone</label>
+                  <p className="text-sm text-gray-800">{teacherData.phone}</p>
+                </div>
+                
+                <div>
+                  <label className="text-xs font-semibold text-gray-500 uppercase">Joined</label>
+                  <p className="text-sm text-gray-800">{teacherData.joinDate}</p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-2 gap-3 mt-6">
+                <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium">
+                  Edit Profile
+                </button>
+                <button className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all text-sm font-medium">
+                  Settings
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   </nav>
