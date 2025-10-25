@@ -11,4 +11,20 @@ if (!supabaseAnonKey) {
   throw new Error('supabaseAnonKey is required.')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: false,
+  }
+})
+
+// Helper function to set auth token from localStorage
+export const setSupabaseAuth = () => {
+  const token = localStorage.getItem('token')
+  if (token) {
+    supabase.auth.session = { access_token: token }
+  }
+}
+
+// Call this after login
+setSupabaseAuth()
+

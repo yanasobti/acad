@@ -4,26 +4,25 @@ import React from "react";
 const FeatureCard = ({ title, desc, color }) => {
   return (
     <div
-      className={`relative group rounded-xl p-6 shadow-md transition-all duration-500 cursor-pointer
-        bg-gray-900/80 dark:bg-gray-800/80 border border-gray-700/40
-        hover:-translate-y-2 hover:shadow-2xl`}
+      className={`relative group rounded-xl p-6 shadow-sm border border-gray-100 transition-all duration-500 cursor-pointer
+        bg-white hover:shadow-lg hover:-translate-y-1`}
     >
-      {/* Glow Behind on Hover */}
+      {/* Subtle Glow Effect */}
       <div
-        className={`absolute inset-0 rounded-xl blur-2xl opacity-0 group-hover:opacity-70 transition duration-500 -z-10
-          ${color === "green"
-            ? "bg-emerald-400/20"
-            : "bg-blue-400/20"}`}
+        className={`absolute inset-0 rounded-xl opacity-0 group-hover:opacity-20 transition duration-500 -z-10
+          ${color === "green" 
+            ? "bg-emerald-100" 
+            : "bg-blue-100"}`}
       ></div>
 
-      {/* Inner Edge Glow */}
+      {/* Color Accent Border */}
       <div
-        className={`absolute inset-0 rounded-xl ring-1 ring-transparent group-hover:ring-current opacity-0 group-hover:opacity-20 transition duration-500 pointer-events-none
-          ${color === "green" ? "text-emerald-400" : "text-blue-400"}`}
+        className={`absolute top-0 left-0 w-full h-1 rounded-t-xl
+          ${color === "green" ? "bg-emerald-500" : "bg-blue-500"}`}
       ></div>
 
-      <h4 className="text-lg font-semibold text-white mb-2">{title}</h4>
-      <p className="text-gray-300 text-sm">{desc}</p>
+      <h4 className="text-lg font-semibold text-gray-900 mb-2">{title}</h4>
+      <p className="text-gray-600 text-sm leading-relaxed">{desc}</p>
     </div>
   );
 };
@@ -48,15 +47,15 @@ const FeatureCards = () => {
   ];
 
   return (
-    <section className="relative z-10 m-0 p-0 bg-black text-white w-full">
+    <section className="relative z-10 m-0 p-0 bg-white text-gray-800 w-full">
       <div className="w-full flex flex-col justify-center items-center py-16">
         <div className="w-full px-4 md:px-8 max-w-6xl">
           {/* Main Heading */}
           <div className="text-center mb-14">
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
               Welcome to Acadence
             </h2>
-            <p className="text-lg md:text-xl text-gray-400 font-medium max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-600 font-medium max-w-3xl mx-auto">
               Your intelligent academic companion designed to make learning and
               teaching smarter, easier, and more efficient.
             </p>
@@ -65,16 +64,16 @@ const FeatureCards = () => {
           {/* Students Section */}
           <div className="mb-20" id="for-students">
             <div className="text-center mb-10">
-              <span className="inline-block px-4 py-1 text-sm font-semibold text-emerald-400 bg-emerald-400/10 rounded-full mb-3">
+              <span className="inline-block px-4 py-1 text-sm font-semibold text-emerald-700 bg-emerald-50 rounded-full mb-3 border border-emerald-200">
                 FOR STUDENTS
               </span>
-              <h3 className="text-2xl md:text-3xl font-bold">
-                Smarter Learning <span className="text-emerald-400">Made Simple</span>
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900">
+                Smarter Learning <span className="text-emerald-600">Made Simple</span>
               </h3>
-              <div className="w-24 h-1 bg-gradient-to-r from-emerald-400 to-teal-500 mx-auto mt-4 rounded-full"></div>
+              <div className="w-24 h-1 bg-emerald-400 mx-auto mt-4 rounded-full"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {studentFeatures.map((f, i) => (
                 <FeatureCard key={i} title={f.title} desc={f.desc} color="green" />
               ))}
@@ -84,16 +83,16 @@ const FeatureCards = () => {
           {/* Teachers Section */}
           <div id="for-teachers">
             <div className="text-center mb-10">
-              <span className="inline-block px-4 py-1 text-sm font-semibold text-blue-400 bg-blue-400/10 rounded-full mb-3">
+              <span className="inline-block px-4 py-1 text-sm font-semibold text-blue-700 bg-blue-50 rounded-full mb-3 border border-blue-200">
                 FOR TEACHERS
               </span>
-              <h3 className="text-2xl md:text-3xl font-bold">
-                Teaching <span className="text-blue-400">Reimagined</span>
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900">
+                Teaching <span className="text-blue-600">Reimagined</span>
               </h3>
-              <div className="w-24 h-1 bg-gradient-to-r from-blue-400 to-purple-500 mx-auto mt-4 rounded-full"></div>
+              <div className="w-24 h-1 bg-blue-400 mx-auto mt-4 rounded-full"></div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {teacherFeatures.map((f, i) => (
                 <FeatureCard key={i} title={f.title} desc={f.desc} color="blue" />
               ))}

@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
+const adminRoutes = require("./routes/admin");
+const studentRoutes = require("./routes/student");
+const teacherRoutes = require("./routes/teacher");
 require("dotenv").config();
 const supabase = require("./db"); // ✅ This is now Supabase
 
@@ -46,6 +49,9 @@ testSupabaseConnection();
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/student", studentRoutes);
+app.use("/api/teacher", teacherRoutes);
 
 // ✅ ADD THESE ROUTES:
 app.get('/', (req, res) => {
